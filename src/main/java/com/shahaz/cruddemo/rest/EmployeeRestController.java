@@ -1,12 +1,10 @@
 package com.shahaz.cruddemo.rest;
 
-import com.shahaz.cruddemo.dao.EmployeeDao;
 import com.shahaz.cruddemo.entity.Employee;
 import com.shahaz.cruddemo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.EventObject;
 import java.util.List;
 
 @RestController

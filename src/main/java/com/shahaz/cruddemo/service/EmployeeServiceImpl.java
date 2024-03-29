@@ -1,45 +1,57 @@
 package com.shahaz.cruddemo.service;
 
-import com.shahaz.cruddemo.dao.EmployeeDao;
+import com.shahaz.cruddemo.dao.EmployeeRepository;
 import com.shahaz.cruddemo.entity.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private EmployeeDao employeeDao;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeDao theEmployeeDao) {
-        employeeDao = theEmployeeDao;
+    public EmployeeServiceImpl(EmployeeRepository theEmployeeRepository) {
+        employeeRepository = theEmployeeRepository;
     }
 
     @Override
     public List<Employee> findAll() {
-        List<Employee> employeeList = employeeDao.findAll();
+        List<Employee> employeeList = employeeRepository.findAll();
         return employeeList;
     }
 
     @Override
     public Employee findById(int id) {
-        Employee employee= employeeDao.findById(id);
+
+        Optional<Employee> result = employeeRepository.findById(id);
+
+        Employee employee;
+
+        if(result.isPresent()){
+            employee = result.get();
+        }
+        else { //did not find the employee
+            throw new RuntimeException("Employee not found with id: "+ id);
+        }
+
         return employee;
     }
 
-    @Transactional
-    @Override
+
+    @Override // no @Transactional required while using JpaRepository
     public Employee save(Employee theEmployee) {
-        Employee dbEmployee =  employeeDao.save(theEmployee);
+        Employee dbEmployee =  employeeRepository.save(theEmployee);
         return  dbEmployee;
     }
 
-    @Transactional
+
     @Override
     public void deleteById(int id) {
-        employeeDao.deleteById(id);
+        employeeRepository.deleteById(id);
     }
 }
